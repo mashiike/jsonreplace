@@ -10,7 +10,48 @@ This package provides a JSON utility function for replacing values in JSON.
 This package provides a JSON utility function for replacing values in JSON. 
 It is enabled to replace JSON valuse on matched JSON Schema.  
 
-```go 
+```go
+package main
+
+import (
+	"encoding/json"
+	"log"
+	"os"
+	"strconv"
+	"strings"
+
+	"github.com/mashiike/jsonreplace"
+)
+
+func main() {
+	v := map[string]string{
+		"name": "foo",
+		"age":  "30",
+	}
+	enc := jsonreplace.NewEncoder(os.Stdout)
+	mux := jsonreplace.NewReplaceMux()
+	mux.ReplaceFunc(`{"type":"string"}`, func(raw json.RawMessage) (json.RawMessage, error) {
+		str := strings.Trim(string(raw), `"`)
+		num, err := strconv.ParseInt(str, 10, 64)
+		if err != nil {
+			return raw, nil
+		}
+		return json.Marshal(num)
+	})
+	enc.SetReplacer(mux)
+	if err := enc.Encode(v); err != nil {
+		log.Fatal(err)
+	}
+	// Output:
+	// {"age":30,"name":"foo"}
+}
+```
+
+this example replace string value to number value in JSON.
+
+## Advance Usage: DefaltReplaceMux
+
+```go
 package main
 
 import (
@@ -73,27 +114,27 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-    fmt.Println(string(bs))
+	fmt.Println(string(bs))
 	// Output:
 	// {
-    //   "leader": {
-    //     "email": "***********@example.com",
-    //     "name": "Tarou Yamada",
-    //     "age": 25
-    //   },
-    //   "members": [
-    //     {
-    //       "email": "***********@example.com",
-    //       "name": "Hanako Tanaka",
-    //       "age": 20
-    //     },
-    //     {
-    //       "email": "***********@example.com",
-    //       "name": "Jhon Smith",
-    //       "age": 20
-    //     }
-    //   ]
-    // }
+	//   "leader": {
+	//     "email": "***********@example.com",
+	//     "name": "Tarou Yamada",
+	//     "age": 25
+	//   },
+	//   "members": [
+	//     {
+	//       "email": "***********@example.com",
+	//       "name": "Hanako Tanaka",
+	//       "age": 20
+	//     },
+	//     {
+	//       "email": "***********@example.com",
+	//       "name": "Jhon Smith",
+	//       "age": 20
+	//     }
+	//   ]
+	// }
 }
 
 ```
