@@ -145,7 +145,7 @@ email address masked by `***********@example.com` and age value is decreased by 
 ## Installation
 
 ```bash
-go get github.com/mashiike/slogutils
+go get github.com/mashiike/jsonreplace
 ```
 
 ## License

@@ -1,0 +1,37 @@
+linters-settings:
+  gofmt:
+    simplify: true
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+    ignore: '[rR]ead|[w|W]rite|[c|C]lose|[c|C]ommit|[r|R]ollback|[p|P]rintln'
+  revive:
+    rules:
+      - name: blank-imports
+        disabled: true
+linters:
+  disable-all: true
+  enable:
+    - govet
+    - revive
+    - gocyclo
+    - gofmt
+    - goimports
+    - errcheck
+    - unconvert
+    - ineffassign
+    - typecheck
+    - unused
+    - staticcheck
+
+run:
+  timeout: 15m
+  concurrency: 15
+
+issues:
+  exclude-dirs:
+    - vendor
+    - third_party
+  exclude-files:
+    - ".*\\.gen\\.go"
+    - ".*_test\\.go"
